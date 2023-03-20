@@ -2,11 +2,17 @@ if (process.env.USER) require("dotenv").config();
 const express = require("express");
 const app = express();
 
+//$env:NODE_ENV="test"; npx knex migrate:latest
+//$env:NODE_ENV="test"; npx knex seed:run
+
 const moviesRouter = require("./movies/movies.router");
 
-app.use(express.json());
+const reviewsRouter = require("./reviews/reviews.router");
 
+app.use(express.json());
 app.use("/movies", moviesRouter);
+app.use("/reviews", reviewsRouter);
+//app.use("/theaters", theatersRouter);
 
 // Not found handler
 app.use((req, res, next) => {
