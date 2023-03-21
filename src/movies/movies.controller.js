@@ -2,53 +2,39 @@ const moviesService = require("./movies.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function movieExists(req, res, next) {
+  const movie = await moviesService.read(req.params.movie_id);
 
-    const movie = await moviesService.read(req.params.movie_id);
-   //console.log("movieExists",movie);
-    if (movie) {
-      res.locals.movie = movie;
-      return next();
-    }
-    next({ status: 404, message: `Movie cannot be found.` });
+  if (movie) {
+    res.locals.movie = movie;
+    return next();
   }
-  
-  function read(req, res) {
-    const { movie: data } = res.locals;
-    res.json({ data });
-  }
+  next({ status: 404, message: `Movie cannot be found.` });
+}
 
-  async function readTheaters(req, res) {
-    const  data  = await moviesService.readTheaters(req.params.movie_id);
-    console.log({data})
-    res.json({ data });
-  }
+function read(req, res) {
+  const { movie: data } = res.locals;
+  res.json({ data });
+}
 
-  async function readReviews(req, res) {
-    const  data  = await moviesService.readReviews(req.params.movie_id);
-    res.json({ data });
-  }
+async function readTheaters(req, res) {
+  const data = await moviesService.readTheaters(req.params.movie_id);
+  res.json({ data });
+}
 
-  async function list(req, res) {
-    const isShowing = req.query.is_showing;
+async function readReviews(req, res) {
+  const data = await moviesService.readReviews(req.params.movie_id);
+  res.json({ data });
+}
 
-    let data= [];
-    if(isShowing){
-       data = await moviesService.listMoviesShowing(isShowing);
-    }
-     else{
-       data = await moviesService.list();
-    }
-    res.json({ data });
-  }
+async function list(req, res) {
+  const isShowing = req.query.is_showing;
+  const data = await moviesService.list(isShowing);
+  res.json({ data });
+}
 
-
-  
-  
-
-
-  module.exports = {
-    read: [asyncErrorBoundary(movieExists), read],
-    readTheaters:[asyncErrorBoundary(movieExists), readTheaters],
-    readReviews:[asyncErrorBoundary(movieExists), readReviews],
-    list: asyncErrorBoundary(list),
-  };
+module.exports = {
+  read: [asyncErrorBoundary(movieExists), read],
+  readTheaters: [asyncErrorBoundary(movieExists), readTheaters],
+  readReviews: [asyncErrorBoundary(movieExists), readReviews],
+  list: asyncErrorBoundary(list),
+};
