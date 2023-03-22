@@ -4,14 +4,6 @@ require("dotenv").config();
 
 const { DATABASE_URL } = process.env;
 
-// const {
-//   DATABASE_URL = "postgresql://postgres@localhost/postgres",
-// } = process.env;
-
-// const {
-//      DATABASE_URL = "postgres://pfcoalhg:aKrh_hg3IsP74M0l_Ao0xYnGe9ZcDmlY@ruby.db.elephantsql.com/pfcoalhg",
-//    } = process.env;
-
 module.exports = {
   development: {
     client: "postgresql",
